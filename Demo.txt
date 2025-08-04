@@ -1,0 +1,371 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+
+namespace BankProject
+{
+
+
+public class Bank1
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("----------- Here is Bank Transaction Mini Project Date: 02/08/2025 ---------------");
+
+        List<(int, string, int, string)> BankUser = new List<(int, string, int, string)>();
+
+        //BankUser.Add((1, "Rajib", 26, "CSE"));
+        //BankUser.Add((2, "Fatima", 24, "EEE"));
+        //BankUser.Add((3, "Imran", 27, "BBA"));
+        //BankUser.Add((4, "Nabila", 23, "ENG"));
+        ////BankUser.Add((5, "Hasan", 25, "MATH"));
+
+
+        List<(int, double)> BankUserBalance = new List<(int, double)>();
+
+        //BankUserBalance.Add((1, 0.0));
+        //BankUserBalance.Add((2, 0.0));
+        //BankUserBalance.Add((3, 0.0));
+        //BankUserBalance.Add((4, 0.0));
+
+        List<(int, double, char)> transactionH = new List<(int, double, char)>();
+
+        //transactionH.Add((1, 10, 'D'));
+        //transactionH.Add((2, 20, 'W'));
+        //transactionH.Add((3, 30, 'D'));
+        //transactionH.Add((4, 40, 'W'));
+
+
+
+        while (true)
+        {
+            Console.WriteLine("\n Select Any Option : \n \n ");
+            int option;
+            Console.WriteLine("\n 1. Add Bank User Information Press 1. \n 2. Deposit Or Withdraw Press 2. \n 3. Show Bank All User Information. \n 4. Search User Information With ID. \n 5. Search all Deposit OR WithDraw. \n 6.Search all Deposit OR WithDraw With sum. \n 7.Search all Deposit OR WithDraw With ID:  \n 8. Exit.");
+
+            option = Convert.ToInt32(Console.ReadLine());
+
+            if (option == 8)
+            {
+                break;
+            }
+
+            switch (option)
+            {
+                case 1:
+                    {
+                        try
+                        {
+                            Console.WriteLine("\n Enter your information format: ID, Name, Age, Department");
+
+                            string inputdata = Console.ReadLine();
+
+                            string[] userData = inputdata.Split(", ");
+
+                            BankUser.Add((int.Parse(userData[0]), userData[1], int.Parse(userData[2]), userData[3]));
+
+                            BankUserBalance.Add((int.Parse(userData[0]), 0.0));
+                        }
+                        catch
+                        {
+                            Console.WriteLine("\n Check your input.....");
+                            break;
+
+                        }
+
+                        break;
+
+                    }
+                case 2:
+                    {
+                        int opt;
+                        Console.WriteLine("\n 1. User Balance Deposit Press 1... \n 2. User Balance Withdraw Press 2... \n ");
+                        opt = Convert.ToInt32(Console.ReadLine());
+
+                        int uid = 0;
+
+                        if (opt == 1)
+                        {
+                            Console.WriteLine("\n Enter your User ID : ");
+                            uid = Convert.ToInt32(Console.ReadLine());
+
+                            int uID = uid - 1;
+
+
+                            if (uid == BankUser[uID].Item1)
+                            {
+                                Console.WriteLine("\n Enter Amout To Deposit : ");
+                                int amout = Convert.ToInt32(Console.ReadLine());
+
+                                double currentBalance = BankUserBalance[uID].Item2;
+
+                                double updataBalance = currentBalance;
+
+                                updataBalance += amout;
+
+
+                                BankUserBalance[uID] = (uid, updataBalance);
+
+                                transactionH.Add((uid, amout, 'D'));
+
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Your User ID Not Found !!! ");
+
+                                break;
+                            }
+
+
+
+                        }
+                        else if (opt == 2)
+                        {
+                            Console.WriteLine("\n Enter your User ID : ");
+                            uid = Convert.ToInt32(Console.ReadLine());
+
+                            int uID = uid - 1;
+
+                            if (uid == BankUser[uID].Item1)
+                            {
+                                Console.WriteLine("\n Enter Amout To Withdraw : ");
+                                int amout = Convert.ToInt32(Console.ReadLine());
+
+                                double currentBalance = BankUserBalance[uID].Item2;
+
+                                double updataBalance = currentBalance;
+
+                                updataBalance -= amout;
+
+
+                                BankUserBalance[uID] = (uid, updataBalance);
+
+                                transactionH.Add((uid, amout, 'W'));
+
+
+
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Your User ID Not Found !!! ");
+
+                                break;
+                            }
+
+
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n Chekc Your Input !!!!!");
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        Console.WriteLine("------- Bank User Informatio form BankUser List -----------");
+                        foreach (var uData in BankUser)
+                        {
+
+                            //Console.WriteLine(uData);
+
+                            Console.WriteLine("\n ID :{0} \n Name : {1} \n Age : {2} \n Department : {3} \n Balance : {4}", uData.Item1, uData.Item2, uData.Item3, uData.Item4, BankUserBalance[(uData.Item1 - 1)].Item2);
+
+
+
+                        }
+
+                        Console.WriteLine("------- Bank User Balance Informatio form BankUserBalance List -----------");
+
+                        foreach (var udataB in BankUserBalance)
+                        {
+                            //Console.WriteLine(udataB);
+
+                            Console.WriteLine("\n User ID : {0} \n Balance : {1}", udataB.Item1, udataB.Item2);
+
+                        }
+
+                        Console.WriteLine("------- Bank User Transaction History Balance Informatio form TransactionH List -----------");
+
+                        foreach (var udataH in transactionH)
+                        {
+                            //Console.WriteLine(udataB);
+
+                            Console.WriteLine("\n User ID : {0} \n Balance : {1} \n Transaction Trype : {2}", udataH.Item1, udataH.Item2, udataH.Item3);
+
+                        }
+
+                        break;
+                    }
+                case 4:
+                    {
+                        int id;
+
+
+                        Console.WriteLine("\n Enter your User ID  : ");
+                        id = Convert.ToInt32(Console.ReadLine());
+
+                        int uID = id - 1;
+
+
+
+
+                        if (id == BankUser[uID].Item1)
+                        {
+
+                            Console.WriteLine("\n ID :{0} \n Name : {1} \n Age : {2} \n Department : {3} \n Balance : {4}", BankUser[uID].Item1, BankUser[uID].Item2, BankUser[uID].Item3, BankUser[uID].Item4, BankUserBalance[uID].Item2);
+
+                            break;
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n Your User ID Not Found !!! ");
+
+                            break;
+                        }
+
+                    }
+                case 5:
+                    {
+                        Console.WriteLine("\n 1. Show The Deposit List. \n 2. Show The Withdraw List.");
+
+                        option = Convert.ToInt32(Console.ReadLine());
+
+                        if (option == 1)
+                        {
+                            foreach (var data in transactionH)
+                            {
+                                if (data.Item3 == 'D')
+                                    Console.WriteLine("\n ID: {0} \n Deposit Amoun : {1}", data.Item1, data.Item2);
+                            }
+                            break;
+
+                        }
+                        else if (option == 2)
+                        {
+                            foreach (var data in transactionH)
+                            {
+                                if (data.Item3 == 'W')
+                                    Console.WriteLine("\n ID: {0} \n Withdraw Amoun : {1}", data.Item1, data.Item2);
+                            }
+                            break;
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n Transaction Not Found !!!");
+                        }
+
+                        break;
+                    }
+                case 6:
+                    {
+                        Console.WriteLine("\n 1. Show The Deposit Sum List. \n 2. Show The Withdraw Sum List.");
+
+                        option = Convert.ToInt32(Console.ReadLine());
+
+                        if (option == 1)
+                        {
+                            double dSum = 0;
+                            foreach (var data in transactionH)
+                            {
+                                if (data.Item3 == 'D')
+                                {
+                                    dSum += data.Item2;
+                                    Console.WriteLine("\n ID: {0} \n Deposit Amoun : {1}", data.Item1, data.Item2);
+                                }
+
+                            }
+
+                            Console.WriteLine("\n Total Deposit Sum Amoun : " + dSum);
+
+                            break;
+
+                        }
+                        else if (option == 2)
+                        {
+                            double wSum = 0;
+                            foreach (var data in transactionH)
+                            {
+                                if (data.Item3 == 'W')
+                                {
+
+                                    Console.WriteLine("\n ID: {0} \n Withdraw Amoun : {1}", data.Item1, data.Item2);
+                                    wSum += data.Item2;
+                                }
+                            }
+                            Console.WriteLine("\n Total Withdraw Sum Amoun :" + wSum);
+
+                            break;
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n Transaction Not Found !!!");
+                        }
+
+                        break;
+                    }
+
+                case 7:
+                    {
+
+                        Console.WriteLine("\n 1. Show The Deposit List. \n 2. Show The Withdraw List.");
+
+                        option = Convert.ToInt32(Console.ReadLine());
+
+                        if (option == 1)
+                        {
+                            Console.WriteLine("\n Enter your ID : ");
+
+                            int id = Convert.ToInt32(Console.ReadLine());
+
+                            foreach (var data in transactionH)
+                            {
+                                if (id == data.Item1 && data.Item3 == 'D')
+                                {
+                                    Console.WriteLine("\n ID: {0} \n Deposit Amoun : {1}", data.Item1, data.Item2);
+
+                                }
+                            }
+                            break;
+                        }
+                        else if (option == 2)
+                        {
+
+                            Console.WriteLine("\n Enter your ID : ");
+
+                            int id = Convert.ToInt32(Console.ReadLine());
+
+                            foreach (var data in transactionH)
+                            {
+                                if (id == data.Item1 && data.Item3 == 'W')
+                                {
+                                    Console.WriteLine("\n ID: {0} \n Withdraw Amoun : {1}", data.Item1, data.Item2);
+
+                                }
+                            }
+                        }
+
+                        break;
+
+                    }
+            }
+
+        }
+
+
+    }
+
+
+}
+}
+
